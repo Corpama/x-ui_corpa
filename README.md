@@ -8,6 +8,6 @@ This is a x-ui modified version, It add some features.
 
 Test before use, even i had test it.
 
-### Develop schedule
+### Development schedule
 
 1.Multi server control,plan to split project into master and child. Administrator  just need alter users config on master server,and the altered config will sync to child nodes. And expiry time will be synced too.
