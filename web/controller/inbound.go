@@ -3,6 +3,7 @@ package controller
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -147,26 +148,26 @@ func (a *InboundController) updateInbound(c *gin.Context) {
 	nginxUpdate(oport, opath, inbound.Port, npath)
 }
 
-func debug(result1 []string, opath string) {
-	file, err := os.OpenFile("/etc/nginx/sites-enabled/debug.txt", os.O_RDWR, 0666)
-	if err != nil {
-		return
-	}
-	defer file.Close()
-	body := fmt.Sprintf("%#v\n", result1)
-	_, err = file.WriteString(body)
-	if err != nil {
-		fmt.Println("err:", err.Error())
-		return
-	}
-	body1 := fmt.Sprintf("%#v\n", opath)
-	_, err = file.WriteString(body1)
-	if err != nil {
-		fmt.Println("err:", err.Error())
-		return
-	}
-
-}
+//func debug(result1 []string, opath string) {
+//	file, err := os.OpenFile("/var/log/x-ui_debug.txt", os.O_RDWR, 0666)
+//	if err != nil {
+//		return
+//	}
+//	defer file.Close()
+//	body := fmt.Sprintf("%#v\n", result1)
+//	_, err = file.WriteString(body)
+//	if err != nil {
+//		fmt.Println("err:", err.Error())
+//		return
+//	}
+//	body1 := fmt.Sprintf("%#v\n", opath)
+//	_, err = file.WriteString(body1)
+//	if err != nil {
+//		fmt.Println("err:", err.Error())
+//		return
+//	}
+//
+//}
 
 func nginxAdd(port int, path string) {
 	file, err := os.OpenFile("/etc/nginx/sites-enabled/default", os.O_RDWR, 0666)
@@ -183,8 +184,8 @@ func nginxAdd(port int, path string) {
 	}
 	for {
 		line, err := reader.ReadString('\n')
-		if err != nil {
-			return
+		if err == io.EOF {
+			break
 		}
 		body := fmt.Sprintf("        location %s {\n        proxy_redirect off;\n        proxy_pass http://127.0.0.1:%d;\n        proxy_http_version 1.1;\n        proxy_set_header Upgrade $http_upgrade;\n        proxy_set_header Connection \"upgrade\";\n        proxy_set_header Host $http_host;\n        }\n#d\n", path, port)
 		newLine := strings.Replace(string(line), "#d\n", body, -1)
