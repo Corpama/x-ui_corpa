@@ -147,26 +147,26 @@ func (a *InboundController) updateInbound(c *gin.Context) {
 	nginxUpdate(oport, opath, inbound.Port, npath)
 }
 
-//func debug(result1 []string, opath string) {
-//	file, err := os.OpenFile("/etc/nginx/sites-enabled/debug.txt", os.O_RDWR, 0666)
-//	if err != nil {
-//		return
-//	}
-//	defer file.Close()
-//	body := fmt.Sprintf("%#v\n", result1)
-//	_, err = file.WriteString(body)
-//	if err != nil {
-//		fmt.Println("err:", err.Error())
-//		return
-//	}
-//	body1 := fmt.Sprintf("%#v\n", opath)
-//	_, err = file.WriteString(body1)
-//	if err != nil {
-//		fmt.Println("err:", err.Error())
-//		return
-//	}
-//
-//}
+func debug(result1 []string, opath string) {
+	file, err := os.OpenFile("/etc/nginx/sites-enabled/debug.txt", os.O_RDWR, 0666)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+	body := fmt.Sprintf("%#v\n", result1)
+	_, err = file.WriteString(body)
+	if err != nil {
+		fmt.Println("err:", err.Error())
+		return
+	}
+	body1 := fmt.Sprintf("%#v\n", opath)
+	_, err = file.WriteString(body1)
+	if err != nil {
+		fmt.Println("err:", err.Error())
+		return
+	}
+
+}
 
 func nginxAdd(port int, path string) {
 	file, err := os.OpenFile("/etc/nginx/sites-enabled/default", os.O_RDWR, 0666)
@@ -197,6 +197,7 @@ func nginxAdd(port int, path string) {
 	cmd := exec.Command("/usr/sbin/nginx", "-s", "reload")
 	err1 := cmd.Run()
 	if err1 != nil {
+		fmt.Println("err:", err.Error())
 		return
 	}
 }
@@ -221,6 +222,7 @@ func nginxDel(port int, path string) {
 	cmd := exec.Command("/usr/sbin/nginx", "-s", "reload")
 	err1 := cmd.Run()
 	if err1 != nil {
+		fmt.Println("err:", err.Error())
 		return
 	}
 }
@@ -246,6 +248,7 @@ func nginxUpdate(oport int, opath string, port int, path string) {
 	cmd := exec.Command("/usr/sbin/nginx", "-s", "reload")
 	err1 := cmd.Run()
 	if err1 != nil {
+		fmt.Println("err:", err.Error())
 		return
 	}
 }
