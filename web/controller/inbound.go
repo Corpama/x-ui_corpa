@@ -194,7 +194,7 @@ func nginxAdd(port int, path string) {
 			return
 		}
 	}
-	cmd := exec.Command("nginx", "-s", "reload")
+	cmd := exec.Command("/usr/sbin/nginx", "-s", "reload")
 	err1 := cmd.Run()
 	if err1 != nil {
 		return
@@ -218,7 +218,7 @@ func nginxDel(port int, path string) {
 	if err != nil {
 		return
 	}
-	cmd := exec.Command("nginx", "-s", "reload")
+	cmd := exec.Command("/usr/sbin/nginx", "-s", "reload")
 	err1 := cmd.Run()
 	if err1 != nil {
 		return
@@ -243,7 +243,7 @@ func nginxUpdate(oport int, opath string, port int, path string) {
 	if err != nil {
 		return
 	}
-	cmd := exec.Command("nginx", "-s", "reload")
+	cmd := exec.Command("/usr/sbin/nginx", "-s", "reload")
 	err1 := cmd.Run()
 	if err1 != nil {
 		return
