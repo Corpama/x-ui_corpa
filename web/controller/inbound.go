@@ -79,13 +79,12 @@ func (a *InboundController) addInbound(c *gin.Context) {
 	if err == nil {
 		a.xrayService.SetToNeedRestart()
 	}
-	reg1 := regexp.MustCompile(`"(/.*?)"`)
-	if reg1 == nil {
-		return
+	reg1 := regexp.MustCompile(`"path": "(/.*?)"`)
+	if reg1 != nil {
+		result1 := reg1.FindStringSubmatch(inbound.StreamSettings)
+		result2 := result1[len(result1)-1]
+		nginxAdd(inbound.Port, result2)
 	}
-	result1 := reg1.FindStringSubmatch(inbound.StreamSettings)
-	result2 := result1[len(result1)-1]
-	nginxAdd(inbound.Port, result2)
 }
 
 func (a *InboundController) delInbound(c *gin.Context) {
@@ -103,14 +102,12 @@ func (a *InboundController) delInbound(c *gin.Context) {
 	if err == nil {
 		a.xrayService.SetToNeedRestart()
 	}
-
-	reg1 := regexp.MustCompile(`"(/.*?)"`)
-	if reg1 == nil {
-		return
+	reg1 := regexp.MustCompile(`"path": "(/.*?)"`)
+	if reg1 != nil {
+		result1 := reg1.FindStringSubmatch(inbound.StreamSettings)
+		result2 := result1[len(result1)-1]
+		nginxDel(inbound.Port, result2)
 	}
-	result1 := reg1.FindStringSubmatch(inbound.StreamSettings)
-	result2 := result1[len(result1)-1]
-	nginxDel(inbound.Port, result2)
 }
 
 func (a *InboundController) updateInbound(c *gin.Context) {
@@ -132,20 +129,19 @@ func (a *InboundController) updateInbound(c *gin.Context) {
 		return
 	}
 	oport := oinbound.Port
-	reg1 := regexp.MustCompile(`"(/.*?)"`)
-	if reg1 == nil {
-		return
+	reg1 := regexp.MustCompile(`"path": "(/.*?)"`)
+	if reg1 != nil {
+		result1 := reg1.FindStringSubmatch(oinbound.StreamSettings)
+		opath := result1[len(result1)-1]
+		result2 := reg1.FindStringSubmatch(inbound.StreamSettings)
+		npath := result2[len(result2)-1]
+		nginxUpdate(oport, opath, inbound.Port, npath)
 	}
-	result1 := reg1.FindStringSubmatch(oinbound.StreamSettings)
-	opath := result1[len(result1)-1]
 	err = a.inboundService.UpdateInbound(inbound)
 	jsonMsg(c, "修改", err)
 	if err == nil {
 		a.xrayService.SetToNeedRestart()
 	}
-	result2 := reg1.FindStringSubmatch(inbound.StreamSettings)
-	npath := result2[len(result2)-1]
-	nginxUpdate(oport, opath, inbound.Port, npath)
 }
 
 //func debug(result1 []string, opath string) {
