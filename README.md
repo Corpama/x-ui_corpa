@@ -10,4 +10,4 @@ Test before use, even i had test it.
 
 ### TODO
 
-1.Multi server control,plan to split project into master and child. Administrator  just need alter users config on master server,and the altered config will sync to child nodes. And expiry time will be synced too.
+1.Xray-core Reality.
